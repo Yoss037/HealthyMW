@@ -1,0 +1,1995 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <title>Healthy Monitor</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS v5.3.8 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-image: url('V1.gif');
+            background-size: cover;
+            color: #ffffff;
+            min-height: calc(100vh - 2.5rem);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pie-pagina {
+            max-width: 1225px;
+            background-color: rgba(22, 27, 34, 0.92);
+            border-top: 3px solid #6e1e77;
+            border-radius: 8px;
+            padding: 16px 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+        .btn-referencias {
+            background-color: #c5bfe6;
+            color: #1b1b1b;
+            border: 2px solid #6e1e77;
+            border-radius: 50px;
+        }
+        .btn-referencias:hover { background-color: #6e1e77; color: #fff; }
+
+        .encabezado-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 0;
+        }
+        @media (max-width: 767px) {
+            .encabezado-grid { grid-template-columns: 1fr; }
+            .encabezado-espacio { display: none; }
+            .encabezado-grid > div { justify-content: center !important; }
+        }
+        .form-card {
+            background-color: rgba(22, 27, 34, 0.95);
+            border: 2px solid #6e1e77;
+            border-radius: 10px;
+            padding: 25px;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+        .navbar-custom {
+            background-color: #6e1e77;
+            max-width: 1225px;
+            border-radius: 8px;
+        }
+
+        .card-valor-verde { background-color: #d1e7dd !important; color: #0f5132 !important; border: 2px solid #badbcc !important; cursor: pointer; }
+        .card-valor-amarillo { background-color: #fff3cd !important; color: #664d03 !important; border: 2px solid #ffecb5 !important; cursor: pointer; }
+        .card-valor-rojo { background-color: #f8d7da !important; color: #842029 !important; border: 2px solid #f5c2c7 !important; cursor: pointer; }
+
+        .nombre-sesion {
+            background-color: #fff;
+            color: #000;
+            border-radius: 50px;
+            padding: 6px 18px;
+            font-size: 0.9rem;
+            min-width: 220px;
+        }
+
+        .form-range {
+            height: 1.5rem;
+            background: transparent;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        .form-range::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            background: #23272d;
+            border-radius: 4px;
+            border: 1px solid #6e1e77;
+        }
+        .form-range::-webkit-slider-thumb {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 34px;
+            height: 34px;
+            background-image: url('cohete.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: pointer;
+            margin-top: -13px;
+            border: none; 
+            background-color: transparent; 
+            filter: drop-shadow(0 0 4px rgba(197, 191, 230, 0.6));
+            transition: transform 0.1s ease;
+        }
+
+        /* ===== History Modal ===== */
+        .modal-historial .modal-content {
+            background-color: #232323;
+            border: 2px solid #6e1e77;
+            border-radius: 6px;
+        }
+        .tabla-historial-wrap {
+            max-height: 420px;
+            overflow-y: auto;
+            border: 2px solid #000;
+        }
+        .tabla-historial {
+            margin-bottom: 0;
+            table-layout: fixed;
+        }
+        .tabla-historial thead th {
+            background-color: #c5bfe6 !important;
+            color: #000;
+            font-weight: 500;
+            font-size: 1.15rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            border: 1px solid #000;
+        }
+        .tabla-historial td {
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #000;
+            vertical-align: middle;
+        }
+        .tabla-historial tbody tr.fila-registro { cursor: pointer; }
+        .tabla-historial tbody tr.fila-registro:hover td { background-color: #efecfa; }
+        .texto-2-renglones {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.35;
+        }
+        .btn-modo-grafico {
+            background-color: #fff;
+            color: #000;
+            border: 2px solid #000;
+            border-radius: 50px;
+            padding: 8px 60px;
+            font-size: 1.1rem;
+        }
+        .btn-modo-grafico:hover { background-color: #c5bfe6; }
+
+        /* ===== Graphical Mode Modal ===== */
+        .modal-grafica .modal-body { padding: 0; }
+        .grafica-layout { display: flex; min-height: 540px; }
+
+        /* Collapsible left column */
+        .panel-valores {
+            width: 230px;
+            flex-shrink: 0;
+            background-color: #1b1b1b;
+            border-right: 2px solid #6e1e77;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: width 0.3s ease, border-width 0.3s ease;
+        }
+        .panel-valores.oculto { width: 0; border-right-width: 0; }
+        .btn-valor {
+            flex: 1 1 0;
+            min-height: 66px;
+            width: 230px;
+            text-align: left;
+            padding: 10px 14px;
+            background-color: rgba(13, 202, 240, 0.10);
+            color: #fff;
+            border: 0;
+            border-bottom: 2px solid #111;
+            border-left: 4px solid transparent;
+            transition: background-color 0.15s;
+        }
+        .btn-valor:hover { background-color: rgba(13, 202, 240, 0.22); }
+        .btn-valor.activo {
+            background-color: #9ad9ea;
+            color: #111;
+            border-left-color: #6e1e77;
+        }
+        .btn-valor .nombre-valor { display: block; font-weight: 600; font-size: 0.9rem; line-height: 1.2; }
+        .btn-valor .ultimo-valor { display: block; font-size: 0.78rem; opacity: 0.75; margin-top: 2px; }
+
+        .grafica-principal { flex: 1 1 auto; min-width: 0; padding: 20px 24px; }
+        .btn-panel {
+            background: transparent; color: #c5bfe6; border: 1px solid #6e1e77;
+            border-radius: 6px; padding: 2px 10px; font-size: 0.85rem;
+        }
+        .btn-panel:hover { background-color: #6e1e77; color: #fff; }
+
+        .grafica-caja { position: relative; height: 360px; }
+        .grafica-vacia {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            color: #999; text-align: center; padding: 20px;
+        }
+
+        /* Max / Min Cards */
+        .tarjeta-extremo {
+            background-color: #c5bfe6;
+            color: #1b1b1b;
+            border: 2px solid #1b1b1b;
+            border-radius: 22px;
+            padding: 10px 14px 14px;
+            text-align: center;
+            min-height: 100px;
+        }
+        .tarjeta-extremo .titulo { font-size: 0.85rem; }
+        .tarjeta-extremo .valor { font-size: 1.6rem; font-weight: 700; line-height: 1.2; margin-top: 6px; }
+        .tarjeta-extremo .cuando { font-size: 0.75rem; opacity: 0.75; }
+
+        /* Weekly / Daily view selector */
+        .selector-vista .form-check-input {
+            width: 1.3em; height: 1.3em; border: 2px solid #c5bfe6; background-color: transparent; cursor: pointer;
+        }
+        .selector-vista .form-check-input:checked { background-color: #c5bfe6; border-color: #c5bfe6; }
+        .selector-vista .form-check-label { color: #ddd; font-size: 1.05rem; cursor: pointer; margin-left: 4px; }
+        .leyenda-grafica { font-size: 0.8rem; color: #aaa; }
+        .leyenda-grafica .muestra-rango {
+            display: inline-block; width: 18px; height: 10px; vertical-align: middle; margin-right: 6px;
+            background: rgba(197, 191, 230, 0.12); border: 1px dashed rgba(197, 191, 230, 0.5);
+        }
+
+        @media (max-width: 767px) {
+            .grafica-layout { flex-direction: column; }
+            .panel-valores, .btn-valor { width: 100%; }
+            .panel-valores { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 2px solid #6e1e77; }
+            .panel-valores.oculto { width: 100%; height: 0; border-bottom-width: 0; }
+            .btn-valor { min-width: 140px; }
+        }
+    </style>
+</head>
+
+<body class="container mt-4 mb-3">
+
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+      <symbol id="check-circle-fill" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+      </symbol>
+      <symbol id="info-fill" viewBox="0 0 16 16">
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+      </symbol>
+      <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+      </symbol>
+    </svg>
+
+    <header class="mb-4">
+        <nav class="navbar mx-auto navbar-custom shadow px-3" data-bs-theme="light">
+            <div class="encabezado-grid w-100">
+                <span class="encabezado-espacio"></span>
+                <h1 class="mb-0 text-center" style="color: #ffffff;"><i>Healthy Monitor</i></h1>
+                <div class="d-flex justify-content-end align-items-center gap-2 flex-wrap">
+                    <button class="btn btn-warning btn-sm fw-bold shadow-sm px-3" type="button" data-bs-toggle="modal" data-bs-target="#modalLogin">
+                        🔒 <span id="lbl-estado-sesion">Sign In</span>
+                    </button>
+                    <button class="btn btn-outline-light btn-sm fw-bold px-3 d-none" type="button" id="btn-cerrar-sesion">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mb-5">
+        <!-- MAIN BUTTONS SECTION -->
+        <!-- EXCLUSIVE BUTTON FOR ADMINISTRATORS -->
+        <div class="text-center d-none" id="seccion-admin-btn" style="margin-top: 40px;">
+            <button class="btn btn-danger btn-lg shadow py-3 text-white" type="button" data-bs-toggle="modal" data-bs-target="#modalAdminCrud" style="width: 500px; font-weight: 500;">
+                🛠️ Administration Panel
+            </button>
+        </div>
+
+        <div class="text-center" style="margin-top: 70px; margin-bottom: 50px;">
+            <!-- Button 1: Enter Record / Vitals Monitor -->
+            <div class="mb-4">
+                <button class="btn btn-primary btn-lg shadow py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseIngresar" aria-expanded="false" aria-controls="collapseIngresar" style="width: 500px; font-weight: 500;">
+                    ➕ Enter Record
+                </button>
+            </div>
+
+            <!-- Button 2: View History -->
+            <div class="mb-4">
+                <button class="btn btn-secondary btn-lg shadow py-3 text-white" type="button" data-bs-toggle="modal" data-bs-target="#modalHistorial" style="width: 500px; font-weight: 500;">
+                    📋 View Checkup History
+                </button>
+            </div>
+
+            <!-- Button 3: Medical Information -->
+            <div class="mb-4">
+                <button class="btn btn-info btn-lg shadow py-3 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfoMedica" aria-expanded="false" aria-controls="collapseInfoMedica" style="width: 500px; font-weight: 500;">
+                    📖 Medical Information
+                </button>
+            </div>
+        </div>
+
+        <!-- REGISTRATION FORM WITH SLIDERS AND DUAL BUTTON -->
+        <div class="collapse mb-4" id="collapseIngresar">
+            <div class="form-card mx-auto" style="max-width: 850px;">
+                <h3 class="text-center mb-4 text-info">VITAL SIGNS MONITORING</h3>
+
+                <form id="form-signos">
+
+                    <!-- Heart Rate -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-md-4"><label class="fw-semibold">HEART RATE (bpm):</label></div>
+                        <div class="col-md-3"><input type="number" id="num-fc" class="form-control text-center bg-dark text-white border-secondary" min="40" max="200" value="75"></div>
+                        <div class="col-md-5"><input type="range" id="range-fc" class="form-range" min="40" max="200" value="75"></div>
+                    </div>
+
+                    <!-- Systolic Pressure -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-md-4"><label class="fw-semibold">SYSTOLIC PRESSURE (mmHg):</label></div>
+                        <div class="col-md-3"><input type="number" id="num-sis" class="form-control text-center bg-dark text-white border-secondary" min="70" max="190" value="120"></div>
+                        <div class="col-md-5"><input type="range" id="range-sis" class="form-range" min="70" max="190" value="120"></div>
+                    </div>
+
+                    <!-- Diastolic Pressure -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-md-4"><label class="fw-semibold">DIASTOLIC PRESSURE (mmHg):</label></div>
+                        <div class="col-md-3"><input type="number" id="num-dias" class="form-control text-center bg-dark text-white border-secondary" min="40" max="120" value="80"></div>
+                        <div class="col-md-5"><input type="range" id="range-dias" class="form-range" min="40" max="120" value="80"></div>
+                    </div>
+
+                    <!-- Blood Sugar -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-md-4"><label class="fw-semibold">BLOOD SUGAR (mg/dL):</label></div>
+                        <div class="col-md-3"><input type="number" id="num-azucar" class="form-control text-center bg-dark text-white border-secondary" min="50" max="300" value="95"></div>
+                        <div class="col-md-5"><input type="range" id="range-azucar" class="form-range" min="50" max="300" value="95"></div>
+                    </div>
+
+                    <!-- Body Temperature -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-md-4"><label class="fw-semibold">TEMPERATURE (°C):</label></div>
+                        <div class="col-md-3"><input type="number" id="num-temp" class="form-control text-center bg-dark text-white border-secondary" min="34" max="42" step="0.1" value="36.5"></div>
+                        <div class="col-md-5"><input type="range" id="range-temp" class="form-range" min="34" max="42" step="0.1" value="36.5"></div>
+                    </div>
+
+                    <!-- Sleep Hours -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-md-4"><label class="fw-semibold">SLEEP HOURS:</label></div>
+                        <div class="col-md-3"><input type="number" id="num-sueno" class="form-control text-center bg-dark text-white border-secondary" min="0" max="14" value="8"></div>
+                        <div class="col-md-5"><input type="range" id="range-sueno" class="form-range" min="0" max="14" value="8"></div>
+                    </div>
+
+                    <!-- Oxygen Saturation -->
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-4"><label class="fw-semibold">OXYGEN SATURATION (%):</label></div>
+                        <div class="col-md-3"><input type="number" id="num-oxigeno" class="form-control text-center bg-dark text-white border-secondary" min="70" max="100" value="98"></div>
+                        <div class="col-md-5"><input type="range" id="range-oxigeno" class="form-range" min="70" max="100" value="98"></div>
+                    </div>
+
+                    <!-- Lower Action Buttons -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success w-100 fw-bold py-2 shadow">REGISTER DATA</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" id="btn-ver-indicadores" class="btn btn-info w-100 fw-bold py-2 text-white shadow" data-bs-toggle="modal" data-bs-target="#modalValores" onclick="actualizarValoresDashboard()">VIEW INDICATORS</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- MEDICAL INFORMATION -->
+        <div class="collapse mb-5" id="collapseInfoMedica">
+            <div class="mx-auto" style="max-width: 900px;">
+                <div class="accordion shadow" id="accordionPanelsStayOpenExample">
+
+                    <!-- Heart Rate -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                <span class="fw-bold text-primary">HEART RATE</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                            <div class="accordion-body text-dark">
+                                <i>
+                                    Heart rate is the primary indicator of how efficiently the heart pumps oxygenated blood
+                                    to the brain and tissues, directly reflecting the body's capacity to adapt
+                                    to physical stress and microgravity. Keeping this parameter within optimal resting values is
+                                    vital in space because it ensures continuous oxygenation without fatiguing the heart muscle, allows
+                                    early detection of dehydration or operational stress, and preserves the pumping strength necessary
+                                    to prevent arrhythmias in orbit or fainting upon returning to Earth's gravity.
+                                </i>
+                                <div class="text-center mt-3">
+                                    <img src="FREC2.jpeg" class="img-fluid rounded shadow-sm" alt="Heart Rate" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Body Temperature -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                <span class="fw-bold text-primary">BODY TEMPERATURE</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+                            <div class="accordion-body text-dark">
+                                <i>
+                                    Body temperature reflects the balance between heat generated by metabolism and the body's capacity
+                                    to dissipate it in a gravity-free environment where warm air does not circulate naturally.
+                                    Keeping this parameter within optimal values is essential in space because it allows all enzymatic reactions
+                                    and cellular functions to operate with maximum efficiency, timely alerting to infections or thermal failures inside the space suit
+                                    that could cause severe dehydration, heat stroke, or loss of motor dexterity.
+                                </i>
+                                <div class="text-center mt-3">
+                                    <img src="TEMP.jpeg" class="img-fluid rounded shadow-sm" alt="Body Temperature" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Blood Glucose Level -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                                <span class="fw-bold text-primary">GLUCOSE LEVEL</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+                            <div class="accordion-body text-dark">
+                                <i>
+                                    Blood sugar (glycemia) indicates the availability of circulating glucose, which constitutes the primary energy source for the brain,
+                                    nervous system, and muscle activity. Keeping this parameter within optimal values is vital in space because it guarantees mental clarity,
+                                    concentration, and the reflexes needed to operate complex systems, preventing episodes of confusion or loss of consciousness due to lack of energy,
+                                    as well as muscle wear and immune weakening derived from metabolic stress in orbit.
+                                </i>
+                                <div class="text-center mt-3">
+                                    <img src="Azucar.jpeg" class="img-fluid rounded shadow-sm" alt="Blood Sugar" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Blood Pressure -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" aria-controls="panelsStayOpen-collapseFour">
+                                <span class="fw-bold text-primary">BLOOD PRESSURE</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse">
+                            <div class="accordion-body text-dark">
+                                <i>
+                                    Blood pressure measures the force with which blood circulates through arteries toward vital organs, reflecting the balance between the body's fluid volume
+                                    and blood vessel tone in microgravity. Keeping this parameter within optimal values is fundamental in space because
+                                    it ensures constant cerebral perfusion without damaging vascular walls, prevents fainting or extreme fatigue caused by fluid loss in orbit,
+                                    and avoids excessive intracranial pressure increases that compromise vision during space missions.
+                                </i>
+                                <div class="text-center mt-3">
+                                    <img src="Presion arterial.jpeg" class="img-fluid rounded shadow-sm" alt="Blood Pressure" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Effective Sleep Time -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false" aria-controls="panelsStayOpen-collapseFive">
+                                <span class="fw-bold text-primary">EFFECTIVE SLEEP TIME</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse">
+                            <div class="accordion-body text-dark">
+                                <i>
+                                    Sleep hours measure the physical and neurological recovery time of the organism against the orbital environment, where sunrises every 90 minutes alter natural circadian rhythms.
+                                    Keeping this parameter within optimal values is vital in space because it consolidates memory, restores attention, and preserves reaction times necessary to avoid human errors
+                                    in critical operations, in addition to regulating the immune system and preventing mental and hormonal exhaustion during prolonged missions.
+                                </i>
+                                <div class="text-center mt-3">
+                                    <img src="DORMIR.jpeg" class="img-fluid rounded shadow-sm" alt="Sleep Hours" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Oxyhemoglobin Saturation -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix">
+                                <span class="fw-bold text-primary">OXYHEMOGLOBIN SATURATION</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse">
+                            <div class="accordion-body text-dark">
+                                <i>
+                                    Oxygen saturation indicates the percentage of hemoglobin in the blood carrying oxygen to cells, reflecting both pulmonary efficiency and the quality of
+                                    the artificial atmosphere of the spacecraft or space suit. Keeping this parameter within optimal values is essential in space because it guarantees continuous energy supply
+                                    to the brain and tissues, allowing immediate detection of life support failures or hypoxia conditions that would compromise the crew's vision, judgment, and survival.
+                                </i>
+                                <div class="text-center mt-3">
+                                    <img src="RESP.jpeg" class="img-fluid rounded shadow-sm" alt="Oxygen Saturation" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Space Radiation -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSeven" aria-expanded="false" aria-controls="panelsStayOpen-collapseSeven">
+                                <span class="fw-bold text-primary">SPACE RADIATION</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseSeven" class="accordion-collapse collapse">
+                            <div class="accordion-body text-dark">
+                                <i>
+                                    Space radiation is one of the greatest hazards for astronauts traveling far from Earth, such as on missions to Mars. Upon leaving the natural protection of our atmosphere and Earth's magnetic field, crews are exposed to invisible energy originating from solar storms and distant star explosions. This radiation cannot be seen or felt, yet it can damage both spacecraft electronics and the human body, increasing cancer risk and affecting the nervous system, memory, movement, and behavior.
+                                </i>
+                                <br><br>
+                                <i>
+                                    To make long space voyages safe, NASA investigates the effects of this radiation in special Earth-based laboratories simulating space conditions. With this information, scientists develop constant monitoring systems and new protective technologies to shield spacecraft and safeguard astronaut health.
+                                </i>
+                                <div class="text-center mt-3">
+                                    <img src="RADIACION.jpeg" class="img-fluid rounded shadow-sm" alt="Space Radiation" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Isolation and Confinement -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseEight" aria-expanded="false" aria-controls="panelsStayOpen-collapseEight">
+                                <span class="fw-bold text-primary">ISOLATION AND CONFINEMENT</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseEight" class="accordion-collapse collapse">
+                            <div class="accordion-body text-dark">
+                                <i>
+                                    On long voyages like a mission to Mars, astronauts will spend months or years enclosed in very small spaces, far from Earth and without the instant communication we are accustomed to. This extreme confinement, coupled with work overload, lack of sleep, and circadian clock disruption (lacking a normal day/night cycle), can trigger stress, interpersonal friction, health decline, and mission-threatening errors.
+                                </i>
+                                <br><br>
+                                <i>
+                                    To prevent these issues, NASA carefully selects and trains crews, alongside conducting Earth-based simulations (such as the HERA and CHAPEA projects) where volunteers live enclosed for weeks or up to a year mimicking Mars conditions. Through these studies, scientists develop light therapies to regulate sleep, tools for early detection of emotional distress, and activities like keeping personal journals or growing plants to protect astronaut mental health.
+                                </i>
+                                <div class="text-center mt-3">
+                                    <img src="AISLAMIENTO.jpeg" class="img-fluid rounded shadow-sm" alt="Isolation and Confinement" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Distance from Earth -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseNine" aria-expanded="false" aria-controls="panelsStayOpen-collapseNine">
+                                <span class="fw-bold text-primary">DISTANCE FROM EARTH</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseNine" class="accordion-collapse collapse">
+                            <div class="accordion-body text-dark">
+                                <i>
+                                    Unlike a three-day trip to the Moon, a mission to Mars will take astronauts about 225 million kilometers away from Earth for approximately three years. This vast distance makes immediate help or emergency resupply impossible, causing radio messages to take up to 20 minutes just to arrive. Therefore, if a technical failure or medical emergency occurs, the crew must resolve the problem independently without waiting for real-time instructions from our planet.
+                                </i>
+                                <br><br>
+                                <i>
+                                    To achieve such self-sufficiency, NASA trains astronauts in simulations practicing how to cope with communication delays and strictly ration resources. Furthermore, the agency is developing advanced systems to recycle water and air, as well as nutritious, durable, and varied food items preventing food fatigue, ensuring the crew can survive with onboard provisions.
+                                </i>
+                                <div class="text-center mt-3">
+                                    <img src="DISTANCIA.jpeg" class="img-fluid rounded shadow-sm" alt="Distance from Earth" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 10: Gravitational Fields -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTen" aria-expanded="false" aria-controls="panelsStayOpen-collapseTen">
+                                <span class="fw-bold text-primary">GRAVITATIONAL FIELDS</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseTen" class="accordion-collapse collapse">
+                            <div class="accordion-body text-dark">
+                                <i>
+                                    On a voyage to Mars, astronauts pass through three distinct gravity levels: floating weightless during transit, living with one-third of Earth's gravity on Mars, and re-experiencing normal gravity upon returning to Earth. These abrupt changes disorient the body and impair balance, coordination, and vision, in addition to causing dizziness or fainting upon landing. Without weight-bearing in space, bones lose density each month, muscles weaken, body fluids shift upward toward the head putting pressure on the eyes, and the risk of kidney stones increases.
+                                </i>
+                                <br><br>
+                                <i>
+                                    To prepare the human body and reduce these injuries, NASA studies the effects of weightlessness both on the International Space Station and in specialized Earth facilities. Methods range from head-down tilt bed rest studies to giant pools and cranes simulating partial lunar or Martian gravity, enabling astronaut training and routine design to protect health before and after each landing.
+                                </i>
+                                <div class="text-center mt-3">
+                                    <img src="GRAVEDAD.jpeg" class="img-fluid rounded shadow-sm" alt="Gravitational Fields" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hostile / Enclosed Environments -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseEleven" aria-expanded="false" aria-controls="panelsStayOpen-collapseEleven">
+                                <span class="fw-bold text-primary">HOSTILE / ENCLOSED ENVIRONMENTS</span>
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseEleven" class="accordion-collapse collapse">
+                            <div class="accordion-body text-dark">
+                                <i>
+                                    The interior of a spacecraft operates as a closed artificial ecosystem where natural microbes of the human body alter their behavior and transmit much faster among individuals. Compounding this, mission stress weakens astronauts' immune systems, rendering them more prone to allergies or illnesses, while everyday factors like constant noise, poor lighting, cramped space, or uncomfortable temperatures can severely impact daily well-being.
+                                </i>
+                                <br><br>
+                                <i>
+                                    To ensure the crew lives and works safely and comfortably, NASA continuously monitors microorganisms and air quality inside spacecraft and Earth simulators. Moreover, engineers design every centimeter of the habitat—including inflatable modules expanding available space—to guarantee proper pressure, temperature, light, and silence levels, protecting both physical health and astronaut comfort.
+                                </i>
+                                <div class="text-center mt-3">
+                                    <img src="ENTORNOS.jpeg" class="img-fluid rounded shadow-sm" alt="Hostile or Enclosed Environments" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="pie-pagina mx-auto mt-auto w-100"> 
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+            <div class="text-center text-md-start">
+                <div class="fw-bold">Healthy Monitor References</div>
+                <div class="small text-white-50">Health monitoring for astronauts · <span id="anio-actual"></span></div>
+            </div>
+            <a href="Referencias.pdf" target="_blank" rel="noopener" class="btn btn-referencias fw-bold px-4">
+                📚 References
+            </a>
+        </div>
+    </footer>
+
+    <!-- ASTRONAUT LOGIN MODAL -->
+    <div class="modal fade" id="modalLogin" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-secondary shadow-lg">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title text-info fw-bold">Astronaut Login</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="form-login">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Select Astronaut:</label>
+                            <select id="select-astronauta" class="form-control bg-secondary text-white border-secondary" required>
+                                <option value="">Loading list...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Password (Astronaut ID):</label>
+                            <input type="password" id="input-password" class="form-control bg-secondary text-white border-secondary" placeholder="Enter your idASTRONAUTAS" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2 mt-2">Sign In</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMINISTRATION PANEL MODAL -->
+    <div class="modal fade" id="modalAdminCrud" tabindex="-1" aria-labelledby="modalAdminCrudLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-danger shadow-lg">
+                <div class="modal-header border-danger">
+                    <h5 class="modal-title text-danger fw-bold" id="modalAdminCrudLabel">Administration Panel</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Table selection menu (always visible on open) -->
+                    <div id="crud-menu" class="text-center">
+                        <p class="text-white-50 mb-4">Select the table you want to manage:</p>
+                        <div class="d-grid gap-3 col-md-8 mx-auto">
+                            <button type="button" class="btn btn-outline-danger btn-lg py-3 fw-bold" onclick="abrirCrudTabla('astronautas')">👨‍🚀 Manage Astronauts</button>
+                            <button type="button" class="btn btn-outline-warning btn-lg py-3 fw-bold" onclick="abrirCrudTabla('generos')">⚧️ Manage Genders</button>
+                            <button type="button" class="btn btn-outline-info btn-lg py-3 fw-bold" onclick="abrirCrudTabla('puestos')">🎖️ Manage Positions</button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic container for form and CRUD actions -->
+                    <div id="crud-workspace" class="d-none">
+                        <button type="button" class="btn btn-secondary btn-sm mb-3" onclick="volverCrudMenu()">⬅️ Back to menu</button>
+                        <h4 id="crud-titulo" class="text-info fw-bold mb-3"></h4>
+
+                        <form id="form-crud" class="bg-secondary p-3 rounded mb-4 text-white">
+                            <input type="hidden" id="crud-id" value="">
+                            <div id="crud-campos-dinamicos"></div>
+                            <div class="mt-3 text-end">
+                                <button type="button" class="btn btn-warning me-2" onclick="limpiarFormCrud()">Clear</button>
+                                <button type="submit" class="btn btn-success px-4 fw-bold" id="btn-guardar-crud">Save</button>
+                            </div>
+                        </form>
+
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                            <table class="table table-dark table-striped table-bordered text-center align-middle" id="tabla-crud-datos">
+                                <thead>
+                                    <tr id="crud-tabla-cabecera"></tr>
+                                </thead>
+                                <tbody id="crud-tabla-cuerpo"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- "VALUES" MODAL WINDOW -->
+    <div class="modal fade" id="modalValores" tabindex="-1" aria-labelledby="modalValoresLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content text-white border-0 shadow-lg" style="background-color: #343a40 !important;">
+
+                <div class="modal-header border-bottom border-secondary">
+                    <h2 class="modal-title w-100 text-center fw-bold text-uppercase" id="modalValoresLabel" style="letter-spacing: 2px;">VALUES</h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4">
+                    <!-- General alert container (green / yellow / red) -->
+                    <div id="contenedor-alerta-global" class="mb-4"></div>
+
+                    <div class="row g-4">
+
+                        <!-- Card 1: Temperature -->
+                        <div class="col-md-4">
+                            <div id="card-temperatura" class="card card-valor-verde p-3 shadow-sm text-center h-100" data-bs-toggle="modal" data-bs-target="#modalTemperatura">
+                                <h6 class="fw-bold border-bottom pb-2 mb-2">Temperature</h6>
+                                <h4 id="txt-temp" class="fw-bold mb-2">--</h4>
+                                <p id="desc-temp" class="small mb-0"></p>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Heart Rate -->
+                        <div class="col-md-4">
+                            <div id="card-fc" class="card card-valor-verde p-3 shadow-sm text-center h-100" data-bs-toggle="modal" data-bs-target="#modalCardiaca">
+                                <h6 class="fw-bold border-bottom pb-2 mb-2">Heart Rate</h6>
+                                <h4 id="txt-fc" class="fw-bold mb-2">--</h4>
+                                <p id="desc-fc" class="small mb-0"></p>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Oxygen Saturation -->
+                        <div class="col-md-4">
+                            <div id="card-oxigeno" class="card card-valor-verde p-3 shadow-sm text-center h-100" data-bs-toggle="modal" data-bs-target="#modalOxigeno">
+                                <h6 class="fw-bold border-bottom pb-2 mb-2">Oxygen O2</h6>
+                                <h4 id="txt-oxigeno" class="fw-bold mb-2">--</h4>
+                                <p id="desc-oxigeno" class="small mb-0"></p>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Blood Pressure -->
+                        <div class="col-md-4">
+                            <div id="card-presion" class="card card-valor-verde p-3 shadow-sm text-center h-100" data-bs-toggle="modal" data-bs-target="#modalPresion">
+                                <h6 class="fw-bold border-bottom pb-2 mb-2">Blood Pressure</h6>
+                                <h4 id="txt-presion" class="fw-bold mb-2">--/--</h4>
+                                <p id="desc-presion" class="small mb-0"></p>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Blood Sugar / Glucose -->
+                        <div class="col-md-4">
+                            <div id="card-azucar" class="card card-valor-verde p-3 shadow-sm text-center h-100" data-bs-toggle="modal" data-bs-target="#modalAzucar">
+                                <h6 class="fw-bold border-bottom pb-2 mb-2">Blood Sugar</h6>
+                                <h4 id="txt-azucar" class="fw-bold mb-2">--</h4>
+                                <p id="desc-azucar" class="small mb-0"></p>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: Sleep Hours -->
+                        <div class="col-md-4">
+                            <div id="card-sueno" class="card card-valor-verde p-3 shadow-sm text-center h-100" data-bs-toggle="modal" data-bs-target="#modalSueno">
+                                <h6 class="fw-bold border-bottom pb-2 mb-2">Sleep Hours</h6>
+                                <h4 id="txt-sueno" class="fw-bold mb-2">--</h4>
+                                <p id="desc-sueno" class="small mb-0"></p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <p class="small text-secondary text-center mt-3 mb-0">Click on a card to view its recommendations.</p>
+                </div>
+
+                <div class="modal-footer border-top border-secondary justify-content-center p-3">
+                    <button type="button" class="btn btn-light fw-bold px-5 py-2 shadow-sm rounded-pill text-dark" id="btn-ver-recomendaciones">
+                        View Medical Recommendations
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW "RECOMMENDATIONS" MODAL ("View Medical Recommendations" button from VALUES). -->
+    <div class="modal fade modal-recomendacion" id="modalRecomendaciones" tabindex="-1" aria-labelledby="modalRecomendacionesLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content bg-dark text-white border-secondary shadow-lg">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title fw-bold text-info" id="modalRecomendacionesLabel">Medical Recommendations</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="recomendaciones-contenido"></div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">← Back to values</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECOMMENDATION MODALS BY LEVEL. -->
+
+    <!-- DETAIL MODAL: Body Temperature -->
+    <div class="modal fade modal-recomendacion" id="modalTemperatura" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-secondary shadow-lg">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title fw-bold text-info">Body Temperature</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(25, 135, 84, 0.2); border-left: 4px solid #198754;">
+                        <i><b>• Level 1: Optimal</b><br><span class="texto-nivel">Maintain regular ventilation control in habitable modules to ensure proper body heat dissipation.</span></i>
+                    </div>
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(255, 193, 7, 0.2); border-left: 4px solid #ffc107;">
+                        <i><b>• Level 2: Caution</b><br><span class="texto-nivel">Adjust suit or module airflow, cool the torso with a damp compress, and replenish fluids if thermal stress is detected.</span></i>
+                    </div>
+                    <div class="p-3 rounded" style="background-color: rgba(220, 53, 69, 0.2); border-left: 4px solid #dc3545;">
+                        <i><b>• Level 3: Critical</b><br><span class="texto-nivel">Immediately initiate active cooling measures (in case of hyperthermia/heat stroke) or controlled warming.</span></i>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">← Back to values</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL MODAL: Heart Rate -->
+    <div class="modal fade modal-recomendacion" id="modalCardiaca" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-secondary shadow-lg">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title fw-bold text-info">Heart Rate</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(25, 135, 84, 0.2); border-left: 4px solid #198754;">
+                        <i><b>• Level 1: Optimal</b><br><span class="texto-nivel">Maintain the daily routine of 2.5 hours of aerobic and resistance exercise (ARED and cycle ergometer) to preserve cardiovascular fitness. Maintain scheduled hydration to ensure adequate plasma volume during daily operations on the station.</span></i>
+                    </div>
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(255, 193, 7, 0.2); border-left: 4px solid #ffc107;">
+                        <i><b>• Level 2: Caution</b><br><span class="texto-nivel">Temporarily halt high-concentration tasks, hydrate with electrolytes, and take deep breaths for 15 minutes to stabilize the pulse. Evaluate operational stress levels or current workload, and notify the team if the slight deviation persists after rest.</span></i>
+                    </div>
+                    <div class="p-3 rounded" style="background-color: rgba(220, 53, 69, 0.2); border-left: 4px solid #dc3545;">
+                        <i><b>• Level 3: Critical</b><br><span class="texto-nivel">Immediately suspend any ongoing physical activity or maneuver, adopt a strict resting position, and avoid sudden movements. Urgently contact the flight surgeon on Earth to activate the hemodynamic stabilization and continuous monitoring protocol.</span></i>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">← Back to values</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL MODAL: Oxygen Saturation -->
+    <div class="modal fade modal-recomendacion" id="modalOxigeno" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-secondary shadow-lg">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title fw-bold text-info">Oxygen Saturation</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(25, 135, 84, 0.2); border-left: 4px solid #198754;">
+                        <i><b>• Level 1: Optimal</b><br><span class="texto-nivel">Routinely verify that life support systems and cabin atmosphere pressure operate within standard parameters. Maintain a slow breathing rhythm and proper posture during daily duties to ensure efficient pulmonary exchange.</span></i>
+                    </div>
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(255, 193, 7, 0.2); border-left: 4px solid #ffc107;">
+                        <i><b>• Level 2: Caution</b><br><span class="texto-nivel">Perform deep breathing cycles, check sensor or oximeter placement, and verify proper ventilation of the workspace. Repeat oximetry measurement after five minutes of relative rest and suspend exertion tasks if the slight drop persists.</span></i>
+                    </div>
+                    <div class="p-3 rounded" style="background-color: rgba(220, 53, 69, 0.2); border-left: 4px solid #dc3545;">
+                        <i><b>• Level 3: Critical</b><br><span class="texto-nivel">Immediately connect to a supplemental emergency oxygen source and verify the autonomous operation of the suit or module system. Notify the mission control center of the critical hypoxia situation and activate evacuation or leak check protocols for the spacecraft atmosphere.</span></i>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">← Back to values</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL MODAL: Blood Pressure -->
+    <div class="modal fade modal-recomendacion" id="modalPresion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-secondary shadow-lg">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title fw-bold text-info">Blood Pressure</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(25, 135, 84, 0.2); border-left: 4px solid #198754;">
+                        <i><b>• Level 1: Optimal</b><br><span class="texto-nivel">Maintain regular fluid intake and the established nutritional plan to balance natural fluid redistribution in microgravity. Continue periodic control logs to ensure vascular tone remains stable against the orbital environment.</span></i>
+                    </div>
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(255, 193, 7, 0.2); border-left: 4px solid #ffc107;">
+                        <i><b>• Level 2: Caution</b><br><span class="texto-nivel">Moderately increase water and salt intake if pressure trends low, or reduce sodium load and evaluate rest if elevated. Take an active break in a well-ventilated space and repeat blood pressure measurement after 30 minutes of relaxation.</span></i>
+                    </div>
+                    <div class="p-3 rounded" style="background-color: rgba(220, 53, 69, 0.2); border-left: 4px solid #dc3545;">
+                        <i><b>• Level 3: Critical</b><br><span class="texto-nivel">Suspend any critical operations or spacewalks (EVA), remaining in strict rest to prevent syncope or hypertensive crises. Request priority medical tele-assistance with mission control for pharmacological evaluation and clinical management of the emergency.</span></i>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">← Back to values</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL MODAL: Blood Sugar -->
+    <div class="modal fade modal-recomendacion" id="modalAzucar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-secondary shadow-lg">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title fw-bold text-info">Blood Sugar (Glycemia)</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(25, 135, 84, 0.2); border-left: 4px solid #198754;">
+                        <i><b>• Level 1: Optimal</b><br><span class="texto-nivel">Maintain regular meal schedules and balanced macronutrient intake to sustain stable cognitive performance. Preserve scheduled physical activity to optimize cellular insulin sensitivity against space circadian shifts.</span></i>
+                    </div>
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(255, 193, 7, 0.2); border-left: 4px solid #ffc107;">
+                        <i><b>• Level 2: Caution</b><br><span class="texto-nivel">Consume a fast-absorbing carbohydrate portion if levels drop slightly, or adjust caloric intake and review circadian phase lag if elevated. Perform a new metabolic control measurement fasting or two hours post-meal to confirm glucose stabilization.</span></i>
+                    </div>
+                    <div class="p-3 rounded" style="background-color: rgba(220, 53, 69, 0.2); border-left: 4px solid #dc3545;">
+                        <i><b>• Level 3: Critical</b><br><span class="texto-nivel">Immediately apply the nutritional rescue protocol with fast-acting glycemic sources in case of severe hypoglycemia, or suspend sugar intake and follow medical guidelines in case of acute hyperglycemia. Report the critical metabolic alteration to mission control to receive instructions on onboard pharmacological or clinical management.</span></i>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">← Back to values</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL MODAL: Sleep Hours -->
+    <div class="modal fade modal-recomendacion" id="modalSueno" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-secondary shadow-lg">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title fw-bold text-info">Sleep Duration (Total Sleep Time)</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(25, 135, 84, 0.2); border-left: 4px solid #198754;">
+                        <i><b>• Level 1: Optimal</b><br><span class="texto-nivel">Respect the flight plan schedule for continuous rest within the station's sleep compartments. Maintain proper sleep hygiene, correctly utilizing sleeping bags and controlling cabin ambient lighting.</span></i>
+                    </div>
+                    <div class="mb-3 p-3 rounded" style="background-color: rgba(255, 193, 7, 0.2); border-left: 4px solid #ffc107;">
+                        <i><b>• Level 2: Caution</b><br><span class="texto-nivel">Adjust LED light exposure (employing red or dimmed tones) to favor natural melatonin production and compensate for circadian disruption. Take a controlled nap or brief relaxation period if nighttime rest was slightly reduced.</span></i>
+                    </div>
+                    <div class="p-3 rounded" style="background-color: rgba(220, 53, 69, 0.2); border-left: 4px solid #dc3545;">
+                        <i><b>• Level 3: Critical</b><br><span class="texto-nivel">Reschedule operational tasks for the day and immediately suspend any participation in high-risk activities or spacewalks (EVA) due to severe exhaustion. Complete a mandatory rest and sleep period supervised by the medical team to prevent severe operational errors derived from critical fatigue.</span></i>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">← Back to values</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- "CHECKUP HISTORY" MODAL -->
+    <div class="modal fade modal-historial" id="modalHistorial" tabindex="-1" aria-labelledby="modalHistorialLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content text-white shadow-lg">
+
+                <div class="modal-header border-0 pb-0">
+                    <div class="nombre-sesion" id="historial-nombre">Name</div>
+                    <h5 class="modal-title visually-hidden" id="modalHistorialLabel">Checkup History</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body px-4">
+                    <div id="historial-aviso" class="small text-warning mb-2 d-none"></div>
+
+                    <div class="tabla-historial-wrap">
+                        <table class="table tabla-historial">
+                            <colgroup>
+                                <col style="width: 21%;">
+                                <col style="width: 23%;">
+                                <col style="width: 56%;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Recommendations</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historial-body">
+                                <tr><td colspan="3" class="text-center text-muted py-4">Loading records...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="small text-secondary mt-2 mb-0">Click on a row to view full checkup information.</p>
+                </div>
+
+                <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                    <button type="button" id="btn-modo-grafico" class="btn btn-modo-grafico shadow-sm">Graphical Mode</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- "CHECKUP DETAIL" MODAL (opens when clicking a history row) -->
+    <div class="modal fade modal-historial" id="modalDetalleChequeo" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content text-white shadow-lg">
+                <div class="modal-header border-bottom border-secondary">
+                    <h4 class="modal-title fw-bold" id="modalDetalleLabel">Checkup detail</h4>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4" id="detalle-contenido"></div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">← Back to history</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- "GRAPHICAL MODE" MODAL -->
+    <div class="modal fade modal-historial modal-grafica" id="modalGrafica" tabindex="-1" aria-labelledby="modalGraficaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content text-white shadow-lg">
+                <div class="modal-body">
+                    <div class="grafica-layout">
+
+                        <!-- Left column: evaluated values (click to view chart) -->
+                        <nav class="panel-valores" id="panel-valores" aria-label="Evaluated values"></nav>
+
+                        <!-- Main area -->
+                        <div class="grafica-principal">
+                            <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+                                <button type="button" class="btn-panel" id="btn-toggle-panel" aria-controls="panel-valores" aria-expanded="true">◀ Hide values</button>
+                                <h5 class="mb-0 ms-2 me-auto fw-bold" id="modalGraficaLabel">Heart rate</h5>
+                                <span class="small text-secondary" id="grafica-astronauta"></span>
+                                <button type="button" class="btn-close btn-close-white ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div class="row g-4 align-items-stretch">
+                                <!-- Chart -->
+                                <div class="col-lg-9">
+                                    <div class="small text-secondary mb-1" id="grafica-subtitulo"></div>
+                                    <div class="grafica-caja">
+                                        <canvas id="grafica-canvas" role="img" aria-label="Chart of selected value"></canvas>
+                                        <div class="grafica-vacia d-none" id="grafica-vacia"></div>
+                                    </div>
+                                    <div class="leyenda-grafica mt-2" id="grafica-leyenda"></div>
+
+                                    <!-- Weekly / daily selector -->
+                                    <div class="d-flex justify-content-between selector-vista mt-3 px-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="grafica-vista" id="vista-semana" value="semana">
+                                            <label class="form-check-label" for="vista-semana">Weekly</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="grafica-vista" id="vista-dia" value="dia" checked>
+                                            <label class="form-check-label" for="vista-dia">Daily</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Maximum and Minimum -->
+                                <div class="col-lg-3 d-flex flex-column justify-content-center gap-4">
+                                    <div class="tarjeta-extremo">
+                                        <div class="titulo">Maximum</div>
+                                        <div class="valor" id="valor-maximo">—</div>
+                                        <div class="cuando" id="cuando-maximo"></div>
+                                    </div>
+                                    <div class="tarjeta-extremo">
+                                        <div class="titulo">Minimum</div>
+                                        <div class="valor" id="valor-minimo">—</div>
+                                        <div class="cuando" id="cuando-minimo"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-end mt-3">
+                                <button type="button" class="btn btn-light btn-sm rounded-pill px-4" data-bs-dismiss="modal">← Back to history</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS: SESSION, INDICATORS, HISTORY, CHARTS AND COMMUNICATION WITH ServidorLocalJava -->
+    <script>
+        // =====================================================================
+        //  CONNECTION WITH ServidorLocalJava
+        // =====================================================================
+        const API = location.protocol.startsWith('http') ? '' : 'http://localhost:8081';
+
+        function esc(v) {
+            return String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        // =====================================================================
+        //  SIGN IN / LOGIN
+        // =====================================================================
+        let astronautaLogueadoId = null;
+        let astronautaLogueadoNombre = '';
+
+        // Load astronaut list for Login (/api/astronautas)
+        async function cargarAstronautas() {
+            const select = document.getElementById('select-astronauta');
+            try {
+                const res = await fetch(`${API}/api/astronautas`);
+                const lista = await res.json();
+                select.innerHTML = '<option value="">-- Select your name --</option>' +
+                    lista.map(ast => `<option value="${ast.id}" data-puesto="${ast.idPuesto}">${esc(ast.nombre)}</option>`).join('');
+            } catch (e) {
+                console.error('Could not connect to Java to load astronauts.', e);
+                select.innerHTML = '<option value="">⚠️ No connection to Java server</option>';
+            }
+        }
+
+        // Position ID for "Administrator" (created by ServidorLocalJava in PUESTOS table)
+        const ID_PUESTO_ADMIN = 1;
+
+        function aplicarSesion(id, nombre, idPuesto) {
+            astronautaLogueadoId = id;
+            astronautaLogueadoNombre = nombre;
+            document.getElementById('lbl-estado-sesion').innerText = 'Session: ' + nombre.split(' ')[0];
+            document.getElementById('historial-nombre').textContent = nombre;
+            document.getElementById('grafica-astronauta').textContent = nombre;
+            document.getElementById('btn-cerrar-sesion').classList.remove('d-none');
+
+            // The Administration Panel only appears for the administrator role.
+            const esAdmin = Number(idPuesto) === ID_PUESTO_ADMIN;
+            document.getElementById('seccion-admin-btn').classList.toggle('d-none', !esAdmin);
+        }
+
+        // Sign out
+        function cerrarSesion() {
+            if (!astronautaLogueadoId) return;
+            const nombre = astronautaLogueadoNombre;
+            astronautaLogueadoId = null;
+            astronautaLogueadoNombre = '';
+            registrosHistorial = [];
+            try { sessionStorage.removeItem('hmw-sesion'); } catch (_) {}
+            document.getElementById('lbl-estado-sesion').innerText = 'Sign In';
+            document.getElementById('historial-nombre').textContent = 'Name';
+            document.getElementById('grafica-astronauta').textContent = '';
+            document.getElementById('btn-cerrar-sesion').classList.add('d-none');
+            document.getElementById('seccion-admin-btn').classList.add('d-none');
+            bootstrap.Modal.getOrCreateInstance('#modalAdminCrud').hide();
+            alert('Session closed. Goodbye, ' + nombre + '!');
+        }
+
+        document.getElementById('form-login').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const select = document.getElementById('select-astronauta');
+            const selectId = select.value;
+            const password = document.getElementById('input-password').value;
+
+            if (selectId && selectId === password) {
+                const nombre = select.selectedOptions[0].text;
+                const idPuesto = select.selectedOptions[0].dataset.puesto;
+                aplicarSesion(selectId, nombre, idPuesto);
+                try { sessionStorage.setItem('hmw-sesion', JSON.stringify({ id: selectId, nombre, idPuesto })); } catch (_) {}
+                alert('Welcome, ' + nombre + '! Session successfully started.');
+                bootstrap.Modal.getOrCreateInstance('#modalLogin').hide();
+                document.getElementById('input-password').value = '';
+            } else {
+                alert('Incorrect password. You must enter your exact numeric astronaut ID.');
+            }
+        });
+
+        // =====================================================================
+        //  ADMINISTRATION PANEL: MANAGEMENT OF ASTRONAUTS, GENDERS AND POSITIONS
+        // =====================================================================
+        let tablaActualCrud = '';
+
+        function abrirCrudTabla(tabla) {
+            tablaActualCrud = tabla;
+            document.getElementById('crud-menu').classList.add('d-none');
+            document.getElementById('crud-workspace').classList.remove('d-none');
+            limpiarFormCrud();
+
+            const titulos = {
+                'generos': 'Gender Management',
+                'puestos': 'Position Management',
+                'astronautas': 'Astronaut Management'
+            };
+            document.getElementById('crud-titulo').textContent = titulos[tabla];
+
+            construirFormularioCrud(tabla);
+        }
+
+        function volverCrudMenu() {
+            document.getElementById('crud-workspace').classList.add('d-none');
+            document.getElementById('crud-menu').classList.remove('d-none');
+        }
+
+        document.getElementById('modalAdminCrud').addEventListener('show.bs.modal', () => {
+            volverCrudMenu();
+        });
+
+        async function construirFormularioCrud(tabla) {
+            const contenedor = document.getElementById('crud-campos-dinamicos');
+            if (tabla === 'generos' || tabla === 'puestos') {
+                contenedor.innerHTML = `
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Description:</label>
+                        <input type="text" id="crud-descripcion" class="form-control bg-dark text-white border-secondary" placeholder="E.g., ${tabla === 'generos' ? 'Male / Female' : 'Administrator / Astronaut'}" required>
+                    </div>
+                `;
+                cargarDatosCrud(tabla);
+            } else if (tabla === 'astronautas') {
+                try {
+                    const [resGen, resPues] = await Promise.all([
+                        fetch(`${API}/api/crud/generos`),
+                        fetch(`${API}/api/crud/puestos`)
+                    ]);
+                    const generos = await resGen.json();
+                    const puestos = await resPues.json();
+
+                    const opcionesGen = generos.map(g => `<option value="${g.id}">${esc(g.descripcion)}</option>`).join('');
+                    const opcionesPues = puestos.map(p => `<option value="${p.id}">${esc(p.descripcion)}</option>`).join('');
+
+                    contenedor.innerHTML = `
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold">First Name:</label>
+                                <input type="text" id="crud-nombre" class="form-control bg-dark text-white border-secondary" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold">Paternal Last Name:</label>
+                                <input type="text" id="crud-paterno" class="form-control bg-dark text-white border-secondary" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold">Maternal Last Name:</label>
+                                <input type="text" id="crud-materno" class="form-control bg-dark text-white border-secondary" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold">Age:</label>
+                                <input type="number" id="crud-edad" class="form-control bg-dark text-white border-secondary" min="18" max="80" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold">Gender:</label>
+                                <select id="crud-idgeneros" class="form-control bg-dark text-white border-secondary" required>
+                                    ${opcionesGen}
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold">Position:</label>
+                                <select id="crud-idpuestos" class="form-control bg-dark text-white border-secondary" required>
+                                    ${opcionesPues}
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                    cargarDatosCrud(tabla);
+                } catch (err) {
+                    console.error('Error loading selects for astronauts', err);
+                }
+            }
+        }
+
+        function limpiarFormCrud() {
+            document.getElementById('crud-id').value = '';
+            const desc = document.getElementById('crud-descripcion');
+            if (desc) desc.value = '';
+            const nom = document.getElementById('crud-nombre');
+            if (nom) {
+                nom.value = '';
+                document.getElementById('crud-paterno').value = '';
+                document.getElementById('crud-materno').value = '';
+                document.getElementById('crud-edad').value = '';
+                if (document.getElementById('crud-idgeneros')) document.getElementById('crud-idgeneros').selectedIndex = 0;
+                if (document.getElementById('crud-idpuestos')) document.getElementById('crud-idpuestos').selectedIndex = 0;
+            }
+        }
+
+        async function cargarDatosCrud(tabla) {
+            const cabecera = document.getElementById('crud-tabla-cabecera');
+            const cuerpo = document.getElementById('crud-tabla-cuerpo');
+            cuerpo.innerHTML = `<tr><td colspan="6" class="text-center text-white-50">Loading...</td></tr>`;
+
+            const botones = item => `
+                <button class="btn btn-sm btn-info me-1" title="Edit" onclick='prepararEditar(${esc(JSON.stringify(item))}, "${tabla}")'>✏️</button>
+                <button class="btn btn-sm btn-danger" title="Delete" onclick='eliminarRegistro("${tabla}", ${item.id})'>🗑️</button>`;
+
+            try {
+                const res = await fetch(`${API}/api/crud/${tabla}`);
+                const datos = await res.json();
+
+                if (tabla === 'generos' || tabla === 'puestos') {
+                    cabecera.innerHTML = `<th>ID</th><th>Description</th><th>Actions</th>`;
+                    if (!datos.length) {
+                        cuerpo.innerHTML = `<tr><td colspan="3" class="text-center text-white-50">No records</td></tr>`;
+                        return;
+                    }
+                    cuerpo.innerHTML = datos.map(item => `
+                        <tr>
+                            <td>${item.id}</td>
+                            <td>${esc(item.descripcion)}</td>
+                            <td>${botones(item)}</td>
+                        </tr>
+                    `).join('');
+                } else if (tabla === 'astronautas') {
+                    cabecera.innerHTML = `<th>ID</th><th>Full Name</th><th>Age</th><th>Gender</th><th>Position</th><th>Actions</th>`;
+                    if (!datos.length) {
+                        cuerpo.innerHTML = `<tr><td colspan="6" class="text-center text-white-50">No records</td></tr>`;
+                        return;
+                    }
+                    cuerpo.innerHTML = datos.map(item => `
+                        <tr>
+                            <td>${item.id}</td>
+                            <td>${esc(item.nombre + ' ' + item.paterno + ' ' + item.materno)}</td>
+                            <td>${item.edad}</td>
+                            <td>${esc(item.generoDesc)}</td>
+                            <td>${esc(item.puestoDesc)}</td>
+                            <td>${botones(item)}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Error loading CRUD data', err);
+                cuerpo.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading data from server</td></tr>`;
+            }
+        }
+
+        function prepararEditar(item, tabla) {
+            document.getElementById('crud-id').value = item.id;
+            if (tabla === 'generos' || tabla === 'puestos') {
+                document.getElementById('crud-descripcion').value = item.descripcion;
+            } else if (tabla === 'astronautas') {
+                document.getElementById('crud-nombre').value = item.nombre;
+                document.getElementById('crud-paterno').value = item.paterno;
+                document.getElementById('crud-materno').value = item.materno;
+                document.getElementById('crud-edad').value = item.edad;
+                document.getElementById('crud-idgeneros').value = item.idGeneros;
+                document.getElementById('crud-idpuestos').value = item.idPuestos;
+            }
+        }
+
+        async function eliminarRegistro(tabla, id) {
+            if (!confirm(`Are you sure you want to delete record ID ${id}?`)) return;
+            try {
+                const res = await fetch(`${API}/api/crud/${tabla}?id=${id}`, { method: 'DELETE' });
+                alert(await res.text());
+                cargarDatosCrud(tabla);
+                if (tabla === 'astronautas') cargarAstronautas();
+            } catch (err) {
+                console.error('Error deleting', err);
+                alert('Connection error while deleting.');
+            }
+        }
+
+        document.getElementById('form-crud').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('crud-id').value;
+            let payload = { id: id ? Number(id) : 0 };
+
+            if (tablaActualCrud === 'generos' || tablaActualCrud === 'puestos') {
+                payload.descripcion = document.getElementById('crud-descripcion').value;
+            } else if (tablaActualCrud === 'astronautas') {
+                payload.nombre = document.getElementById('crud-nombre').value;
+                payload.paterno = document.getElementById('crud-paterno').value;
+                payload.materno = document.getElementById('crud-materno').value;
+                payload.edad = Number(document.getElementById('crud-edad').value);
+                payload.idGeneros = Number(document.getElementById('crud-idgeneros').value);
+                payload.idPuestos = Number(document.getElementById('crud-idpuestos').value);
+            }
+
+            try {
+                const res = await fetch(`${API}/api/crud/${tablaActualCrud}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                alert(await res.text());
+                limpiarFormCrud();
+                cargarDatosCrud(tablaActualCrud);
+                if (tablaActualCrud === 'astronautas') cargarAstronautas();
+            } catch (err) {
+                console.error('Error saving', err);
+                alert('Connection error while saving.');
+            }
+        });
+
+        // =====================================================================
+        //  FORM: Sliders and Java submission
+        // =====================================================================
+        function sincronizar(numId, rangeId) {
+            const num = document.getElementById(numId);
+            const range = document.getElementById(rangeId);
+            range.addEventListener('input', () => num.value = range.value);
+            num.addEventListener('input', () => range.value = num.value);
+        }
+        sincronizar('num-fc', 'range-fc');
+        sincronizar('num-sis', 'range-sis');
+        sincronizar('num-dias', 'range-dias');
+        sincronizar('num-azucar', 'range-azucar');
+        sincronizar('num-temp', 'range-temp');
+        sincronizar('num-sueno', 'range-sueno');
+        sincronizar('num-oxigeno', 'range-oxigeno');
+
+        document.getElementById('form-signos').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!astronautaLogueadoId) {
+                alert("⚠️ Access denied! You must sign in by clicking 'Sign In' (top right corner) before registering data.");
+                return;
+            }
+
+            const datosRegistro = {
+                idAstronauta: astronautaLogueadoId,
+                fc: document.getElementById('num-fc').value,
+                presSistolica: document.getElementById('num-sis').value,
+                presDiastolica: document.getElementById('num-dias').value,
+                azucar: document.getElementById('num-azucar').value,
+                temperatura: document.getElementById('num-temp').value,
+                sueno: document.getElementById('num-sueno').value,
+                oxigeno: document.getElementById('num-oxigeno').value
+            };
+
+            try {
+                const respuesta = await fetch(`${API}/api/guardar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datosRegistro)
+                });
+                alert(await respuesta.text());
+            } catch (error) {
+                console.error('Connection error:', error);
+                alert('Could not connect to Java server. Make sure to run ServidorLocalJava.');
+            }
+        });
+
+        // =====================================================================
+        //  INDICATORS EVALUATION (green / yellow / red)
+        // =====================================================================
+        function evaluarNivel(indicador, r) {
+            const v = k => parseFloat(r[k]);
+            switch (indicador) {
+                case 'temperatura': {
+                    const t = v('temperatura');
+                    if (t >= 36.3 && t <= 37.3) return 1;
+                    if ((t >= 35.5 && t < 36.3) || (t > 37.3 && t <= 38.0)) return 2;
+                    return 3;
+                }
+                case 'fc': {
+                    const fc = v('fc');
+                    if (fc >= 50 && fc <= 90) return 1;
+                    if ((fc >= 40 && fc < 50) || (fc > 90 && fc <= 115)) return 2;
+                    return 3;
+                }
+                case 'oxigeno': {
+                    const o = v('oxigeno');
+                    if (o >= 95) return 1;
+                    if (o > 90) return 2;
+                    return 3;
+                }
+                case 'presion': {
+                    const s = v('presSistolica'), d = v('presDiastolica');
+                    const nivelS = (s >= 95 && s <= 125) ? 1 : ((s >= 90 && s < 95) || (s > 125 && s < 140)) ? 2 : 3;
+                    const nivelD = (d >= 60 && d <= 80) ? 1 : ((d >= 55 && d < 60) || (d > 80 && d < 90)) ? 2 : 3;
+                    return Math.max(nivelS, nivelD);
+                }
+                case 'azucar': {
+                    const a = v('azucar');
+                    if (a >= 70 && a <= 99) return 1;
+                    if ((a >= 60 && a < 70) || (a > 99 && a <= 125)) return 2;
+                    return 3;
+                }
+                case 'sueno': {
+                    const s = v('sueno');
+                    if (s >= 7 && s <= 8.5) return 1;
+                    if ((s >= 5 && s < 7) || (s > 8.5 && s <= 10)) return 2;
+                    return 3;
+                }
+            }
+        }
+
+        const INDICADORES = [
+            { id: 'temperatura', nombre: 'Temperature', card: 'card-temperatura', txt: 'txt-temp', desc: 'desc-temp', modal: 'modalTemperatura',
+              valor: r => r.temperatura + '°C',
+              textos: ['Your thermoregulation is adequate and maintains a correct balance between metabolic heat and cabin ventilation. All cellular and enzymatic functions operate under normal conditions.',
+                       'You present a mild thermal alteration that could affect your physical performance or manual dexterity. Check your module or spacesuit airflow, hydrate, and monitor for infection symptoms.',
+                       'Severe risk of hypothermia or heat stroke due to thermal failure or acute infectious condition. Immediately initiate active cooling or warming measures and request priority medical evaluation.'] },
+            { id: 'fc', nombre: 'Heart rate', card: 'card-fc', txt: 'txt-fc', desc: 'desc-fc', modal: 'modalCardiaca',
+              valor: r => r.fc + ' bpm',
+              textos: ['Your heart rate is stable and shows good adaptation to microgravity. The heart pumps blood efficiently to the brain and tissues without fatigue or overexertion.',
+                       'A moderate deviation in your pulse is detected, possibly caused by mild dehydration, fatigue, or operational stress. Hydrate well, rest, and recheck your signs in 15 minutes.',
+                       'Cardiovascular alert due to heart rate outside the safe resting range, compromising blood flow. Immediately suspend all physical activity and contact the medical team on Earth.'] },
+            { id: 'oxigeno', nombre: 'Oxygen saturation', card: 'card-oxigeno', txt: 'txt-oxigeno', desc: 'desc-oxigeno', modal: 'modalOxigeno',
+              valor: r => r.oxigeno + '%',
+              textos: ['Your blood oxygenation is optimal, confirming efficient pulmonary exchange. This also demonstrates that the artificial cabin atmosphere or suit supply is functioning normally.',
+                       'A slight decrease in oxygen transport to your tissues is detected (mild hypoxemia). Check your environment ventilation, take deep breaths, and repeat the reading in 5 minutes.',
+                       'Respiratory alert due to critical lack of oxygen, compromising cognitive capacity and vision. Immediately check the emergency oxygen supply and notify mission control.'] },
+            { id: 'presion', nombre: 'Blood pressure', card: 'card-presion', txt: 'txt-presion', desc: 'desc-presion', modal: 'modalPresion',
+              valor: r => r.presSistolica + '/' + r.presDiastolica,
+              textos: ['Your blood pressure is balanced and properly compensates for fluid displacement in space. This guarantees constant blood flow to vital organs without damaging blood vessels.',
+                       'You present moderate blood pressure variation requiring preventive attention. If low, increase fluid and electrolyte intake; if elevated, reduce sodium consumption and evaluate your stress level.',
+                       'High hemodynamic risk due to severe hypotension or hypertensive crisis in orbit. Halt current operations, adopt a safe position, and request urgent medical teleconsultation.'] },
+            { id: 'azucar', nombre: 'Blood sugar', card: 'card-azucar', txt: 'txt-azucar', desc: 'desc-azucar', modal: 'modalAzucar',
+              valor: r => r.azucar + ' mg/dL',
+              textos: ['Your glucose levels are ideal and keep your energy metabolism stable. This ensures the mental clarity, concentration, and reflexes necessary to operate spacecraft systems with precision.',
+                       'A moderate metabolic imbalance derived from stress or circadian rhythm changes is observed. If low, consume complex carbohydrates; if high, review meal schedules and retest later.',
+                       'Metabolic alert due to acute lack of brain energy or hyperglycemic decompensation. Immediately apply the nutritional rescue protocol and report your status to mission control.'] },
+            { id: 'sueno', nombre: 'Sleep hours', card: 'card-sueno', txt: 'txt-sueno', desc: 'desc-sueno', modal: 'modalSueno',
+              valor: r => r.sueno + ' Hours',
+              textos: ['You have completed a restorative rest period allowing complete physical and neurological recovery. Your reaction times and attention are in optimal condition for critical activities.',
+                       'Your rest cycle shows moderate alteration due to sleep deficit or accumulated fatigue. Adjust cabin artificial light exposure and apply sleep hygiene measures in your next shift.',
+                       'Critical fatigue level severely reducing reflexes and decision-making capacity. Avoid high-risk maneuvers or spacewalks (EVA) until completing a mandatory rest period.'] }
+        ];
+        const CLASE_NIVEL = ['', 'card-valor-verde', 'card-valor-amarillo', 'card-valor-rojo'];
+        const NOMBRE_NIVEL = ['', 'Optimal', 'Caution', 'Critical'];
+
+        function leerFormulario() {
+            return {
+                fc: document.getElementById('num-fc').value,
+                presSistolica: document.getElementById('num-sis').value,
+                presDiastolica: document.getElementById('num-dias').value,
+                azucar: document.getElementById('num-azucar').value,
+                temperatura: document.getElementById('num-temp').value,
+                sueno: document.getElementById('num-sueno').value,
+                oxigeno: document.getElementById('num-oxigeno').value
+            };
+        }
+
+        function actualizarValoresDashboard() {
+            const r = leerFormulario();
+            let criticos = 0;
+            let precauciones = 0;
+            INDICADORES.forEach(ind => {
+                const nivel = evaluarNivel(ind.id, r);
+                document.getElementById(ind.card).className = `card ${CLASE_NIVEL[nivel]} p-3 shadow-sm text-center h-100`;
+                document.getElementById(ind.txt).innerText = ind.valor(r);
+                document.getElementById(ind.desc).innerText = ind.textos[nivel - 1];
+                if (nivel === 3) criticos++;
+                else if (nivel === 2) precauciones++;
+            });
+            mostrarAlertaGeneral(criticos, precauciones);
+        }
+
+        const MIN_ROJOS_ADVERTENCIA = 3;
+        function mostrarAlertaGeneral(criticos, precauciones) {
+            const contenedor = document.getElementById('contenedor-alerta-global');
+            if (criticos >= MIN_ROJOS_ADVERTENCIA) {
+                contenedor.innerHTML = `
+                    <div class="alert alert-danger d-flex align-items-center mb-0 shadow-sm" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                        <div><b>WARNING.</b> Many of your levels are critical (${criticos} of 6 in red)</div>
+                    </div>`;
+            } else if (criticos > 0 || precauciones > 0) {
+                contenedor.innerHTML = `
+                    <div class="alert alert-warning d-flex align-items-center mb-0 shadow-sm" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Notice:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                        <div><b>NOTICE.</b> Some of your levels require attention</div>
+                    </div>`;
+            } else {
+                contenedor.innerHTML = `
+                    <div class="alert alert-success d-flex align-items-center mb-0 shadow-sm" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Correct:"><use xlink:href="#check-circle-fill"/></svg>
+                        <div><b>Excellent.</b> Your levels are optimal</div>
+                    </div>`;
+            }
+        }
+
+        function textoRecomendacion(ind, nivel) {
+            const bloques = document.querySelectorAll(`#${ind.modal} .texto-nivel`);
+            return bloques[nivel - 1] ? bloques[nivel - 1].textContent.trim() : '';
+        }
+
+        const SIN_ALERTAS = 'All vital signs at optimal level. Maintain routine and usual controls.';
+        function listaRecomendaciones(r) {
+            return INDICADORES
+                .map(ind => ({ ind, nivel: evaluarNivel(ind.id, r) }))
+                .filter(a => a.nivel > 1)
+                .sort((a, b) => b.nivel - a.nivel)
+                .map(a => ({ ...a, texto: textoRecomendacion(a.ind, a.nivel) }));
+        }
+
+        function generarRecomendaciones(r) {
+            const alertas = listaRecomendaciones(r);
+            if (!alertas.length) return SIN_ALERTAS;
+            return alertas.map(a => `${a.ind.nombre} (${NOMBRE_NIVEL[a.nivel]}): ${a.texto}`).join('\n\n');
+        }
+
+        const ESTILO_NIVEL = ['',
+            'background-color: rgba(25, 135, 84, 0.2); border-left: 4px solid #198754;',
+            'background-color: rgba(255, 193, 7, 0.2); border-left: 4px solid #ffc107;',
+            'background-color: rgba(220, 53, 69, 0.2); border-left: 4px solid #dc3545;'];
+
+        function mostrarRecomendaciones() {
+            const r = leerFormulario();
+            const alertas = listaRecomendaciones(r);
+            document.getElementById('recomendaciones-contenido').innerHTML = alertas.length
+                ? alertas.map(a => `
+                    <div class="mb-3 p-3 rounded" style="${ESTILO_NIVEL[a.nivel]}">
+                        <b>${esc(a.ind.nombre)} — ${esc(a.ind.valor(r))} (Level ${a.nivel}: ${NOMBRE_NIVEL[a.nivel]})</b><br>
+                        <i>${esc(a.texto)}</i>
+                    </div>`).join('')
+                : `<div class="p-3 rounded" style="${ESTILO_NIVEL[1]}"><i>${SIN_ALERTAS}</i></div>`;
+
+            document.getElementById('modalValores').addEventListener('hidden.bs.modal',
+                () => bootstrap.Modal.getOrCreateInstance('#modalRecomendaciones').show(), { once: true });
+            bootstrap.Modal.getOrCreateInstance('#modalValores').hide();
+        }
+
+        // =====================================================================
+        //  CHECKUP HISTORY
+        // =====================================================================
+        let registrosHistorial = [];
+
+        const dos = n => String(n).padStart(2, '0');
+        const claveFecha = d => `${d.getFullYear()}-${dos(d.getMonth() + 1)}-${dos(d.getDate())}`;
+        const desdeClave = k => { const [a, m, d] = k.split('-').map(Number); return new Date(a, m - 1, d); };
+        const DIAS_SEMANA = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const etiquetaDia = d => `${DIAS_SEMANA[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1}`;
+        const formatoHora = h => `${dos(Math.floor(h))}:${dos(Math.round((h % 1) * 60))}`;
+
+        function fechaDeRegistro(r) {
+            let d;
+            const f = String(r.fecha || '');
+            if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(f)) {
+                const [dia, mes, anio] = f.split('/').map(Number);
+                d = new Date(anio, mes - 1, dia);
+            } else if (/^\d{4}-\d{2}-\d{2}/.test(f)) {
+                d = desdeClave(f.slice(0, 10));
+            } else {
+                d = new Date(f);
+            }
+            const m = String(r.hora || '').match(/(\d{1,2}):(\d{2})/);
+            if (m) d.setHours(+m[1], +m[2], 0, 0);
+            return d;
+        }
+
+        async function cargarHistorial() {
+            const aviso = document.getElementById('historial-aviso');
+            const body = document.getElementById('historial-body');
+            aviso.classList.add('d-none');
+            registrosHistorial = [];
+
+            if (!astronautaLogueadoId) {
+                body.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-4">⚠️ You must sign in to view your history.</td></tr>';
+                return;
+            }
+
+            body.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-4">Loading records...</td></tr>';
+            try {
+                const resp = await fetch(`${API}/api/historial?idAstronauta=${encodeURIComponent(astronautaLogueadoId)}`);
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const datos = await resp.json();
+                registrosHistorial = datos.map(r => {
+                    const fechaObj = fechaDeRegistro(r);
+                    const valida = !isNaN(fechaObj);
+                    return {
+                        ...r,
+                        _fecha: fechaObj,
+                        fechaTexto: valida ? fechaObj.toLocaleDateString('en-US') : (r.fecha || '—'),
+                        horaTexto: valida && r.hora ? `${dos(fechaObj.getHours())}:${dos(fechaObj.getMinutes())}` : (r.hora || '—'),
+                        recomendaciones: generarRecomendaciones(r)
+                    };
+                });
+                pintarHistorial();
+            } catch (err) {
+                console.error('Could not load history:', err);
+                aviso.textContent = 'Error connecting to Java server.';
+                aviso.classList.remove('d-none');
+                body.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-4">Could not load records.</td></tr>';
+            }
+        }
+
+        function pintarHistorial() {
+            const body = document.getElementById('historial-body');
+            if (!registrosHistorial.length) {
+                body.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-4">No saved records.</td></tr>';
+                return;
+            }
+            body.innerHTML = registrosHistorial.map((r, i) => `
+                <tr class="fila-registro" data-index="${i}" tabindex="0" title="View full information">
+                    <td class="text-center">${esc(r.fechaTexto)}</td>
+                    <td class="text-center">${esc(r.horaTexto)}</td>
+                    <td><div class="texto-2-renglones">${esc(r.recomendaciones)}</div></td>
+                </tr>`).join('');
+        }
+
+        function abrirDetalle(index) {
+            const r = registrosHistorial[index];
+            if (!r) return;
+            const fila = (etiqueta, valor) =>
+                `<div class="col-md-6"><div class="p-2 rounded" style="background:#343a40;"><span class="text-secondary small d-block">${etiqueta}</span><span class="fw-bold">${esc(valor)}</span></div></div>`;
+
+            document.getElementById('detalle-contenido').innerHTML = `
+                <div class="row g-3 mb-4">
+                    ${fila('Astronaut', astronautaLogueadoNombre || '—')}
+                    ${fila('Date and time', `${r.fechaTexto} · ${r.horaTexto}`)}
+                    ${fila('Heart rate', `${r.fc} bpm`)}
+                    ${fila('Blood pressure', `${r.presSistolica}/${r.presDiastolica} mmHg`)}
+                    ${fila('Blood sugar', `${r.azucar} mg/dL`)}
+                    ${fila('Temperature', `${r.temperatura} °C`)}
+                    ${fila('Sleep hours', `${r.sueno} h`)}
+                    ${fila('Oxygen saturation', `${r.oxigeno} %`)}
+                </div>
+                <h6 class="text-info fw-bold">Recommendations</h6>
+                <p class="mb-0" style="white-space: pre-line;">${esc(r.recomendaciones)}</p>`;
+
+            irDesdeHistorial('#modalDetalleChequeo');
+        }
+
+        function irDesdeHistorial(selectorDestino) {
+            document.getElementById('modalHistorial').addEventListener('hidden.bs.modal',
+                () => bootstrap.Modal.getOrCreateInstance(selectorDestino).show(), { once: true });
+            bootstrap.Modal.getOrCreateInstance('#modalHistorial').hide();
+        }
+
+        // =====================================================================
+        //  GRAPHICAL MODE
+        // =====================================================================
+        const COLOR_SERIE = '#9085e9';
+
+        const DATOS_GRAFICA = [
+            { campo: 'fc',             nombre: 'Heart rate',          unidad: 'bpm',   dec: 0, rango: [50, 90] },
+            { campo: 'presSistolica',  nombre: 'Systolic pressure',   unidad: 'mmHg',  dec: 0, rango: [95, 125] },
+            { campo: 'presDiastolica', nombre: 'Diastolic pressure',  unidad: 'mmHg',  dec: 0, rango: [60, 80] },
+            { campo: 'azucar',         nombre: 'Blood sugar',         unidad: 'mg/dL', dec: 0, rango: [70, 99] },
+            { campo: 'temperatura',    nombre: 'Temperature',         unidad: '°C',    dec: 1, rango: [36.3, 37.3] },
+            { campo: 'sueno',          nombre: 'Sleep hours',         unidad: 'h',     dec: 1, rango: [7, 8.5] },
+            { campo: 'oxigeno',        nombre: 'Oxygen saturation',   unidad: '%',     dec: 0, rango: [95, 100] }
+        ];
+
+        const estadoGrafica = { campo: 'fc', vista: 'dia' };
+        let graficaActual = null;
+
+        function registrosOrdenados() {
+            return registrosHistorial
+                .filter(r => !isNaN(r._fecha))
+                .sort((a, b) => a._fecha - b._fecha);
+        }
+
+        function abrirModoGrafico() {
+            if (!astronautaLogueadoId) {
+                alert('⚠️ You must sign in to view your charts.');
+                return;
+            }
+            irDesdeHistorial('#modalGrafica');
+        }
+
+        function pintarPanelValores() {
+            const regs = registrosOrdenados();
+            document.getElementById('panel-valores').innerHTML = DATOS_GRAFICA.map(d => {
+                const ultimo = [...regs].reverse().find(r => r[d.campo] !== '' && r[d.campo] != null);
+                const texto = ultimo ? `Latest: ${(+ultimo[d.campo]).toFixed(d.dec)} ${d.unidad}` : 'No records';
+                return `<button type="button" class="btn-valor ${d.campo === estadoGrafica.campo ? 'activo' : ''}" data-campo="${d.campo}" aria-pressed="${d.campo === estadoGrafica.campo}">
+                            <span class="nombre-valor">${d.nombre}</span>
+                            <span class="ultimo-valor">${texto}</span>
+                        </button>`;
+            }).join('');
+        }
+
+        function prepararDatos(dato) {
+            const regs = registrosOrdenados().filter(r => r[dato.campo] !== '' && r[dato.campo] != null);
+            const hoy = new Date();
+            const claveHoy = claveFecha(hoy);
+
+            if (estadoGrafica.vista === 'dia') {
+                const puntos = regs.filter(r => claveFecha(r._fecha) === claveHoy).map(r => ({
+                    x: r._fecha.getHours() + r._fecha.getMinutes() / 60,
+                    y: +r[dato.campo],
+                    cuando: r.horaTexto
+                }));
+                return {
+                    subtitulo: `Today, ${hoy.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' })} · hourly readings`,
+                    vacio: 'No records for today yet.',
+                    puntos
+                };
+            }
+
+            const porDia = new Map();
+            regs.forEach(r => {
+                const k = claveFecha(r._fecha);
+                if (!porDia.has(k)) porDia.set(k, []);
+                porDia.get(k).push(+r[dato.campo]);
+            });
+            const anteriores = [...porDia.keys()].filter(k => k < claveHoy).sort().slice(-6);
+            const dias = [...anteriores, claveHoy];
+            const puntos = dias.map(k => {
+                const vals = porDia.get(k) || [];
+                const d = desdeClave(k);
+                return {
+                    x: k === claveHoy ? `Today ${d.getMonth() + 1}/${d.getDate()}` : etiquetaDia(d),
+                    y: vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null,
+                    n: vals.length,
+                    cuando: k === claveHoy ? 'Today' : d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
+                };
+            });
+            return {
+                subtitulo: 'Today and the last 6 recorded days · daily average',
+                vacio: 'No records to display.',
+                puntos
+            };
+        }
+
+        const pluginRangoNormal = {
+            id: 'rangoNormal',
+            beforeDatasetsDraw(chart, _args, opts) {
+                if (!opts.rango) return;
+                const { ctx, chartArea: a, scales: { y } } = chart;
+                const top = Math.max(y.getPixelForValue(opts.rango[1]), a.top);
+                const bottom = Math.min(y.getPixelForValue(opts.rango[0]), a.bottom);
+                if (bottom <= top) return;
+                ctx.save();
+                ctx.fillStyle = 'rgba(197, 191, 230, 0.10)';
+                ctx.fillRect(a.left, top, a.right - a.left, bottom - top);
+                ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = 'rgba(197, 191, 230, 0.45)';
+                ctx.lineWidth = 1;
+                [top, bottom].forEach(py => { ctx.beginPath(); ctx.moveTo(a.left, py); ctx.lineTo(a.right, py); ctx.stroke(); });
+                ctx.restore();
+            }
+        };
+
+        function dibujarGrafica() {
+            const dato = DATOS_GRAFICA.find(d => d.campo === estadoGrafica.campo);
+            const esDia = estadoGrafica.vista === 'dia';
+            const prep = prepararDatos(dato);
+            const conValor = prep.puntos.filter(p => p.y != null);
+
+            pintarPanelValores();
+            document.getElementById('modalGraficaLabel').textContent = `${dato.nombre} (${dato.unidad})`;
+            document.getElementById('grafica-subtitulo').textContent = prep.subtitulo;
+            document.getElementById('grafica-leyenda').innerHTML =
+                `<span class="muestra-rango"></span>Optimal range: ${dato.rango[0]}–${dato.rango[1]} ${dato.unidad}`;
+
+            const fmt = v => `${v.toFixed(dato.dec)} ${dato.unidad}`;
+            const max = conValor.reduce((m, p) => (!m || p.y > m.y ? p : m), null);
+            const min = conValor.reduce((m, p) => (!m || p.y < m.y ? p : m), null);
+            document.getElementById('valor-maximo').textContent = max ? fmt(max.y) : '—';
+            document.getElementById('valor-minimo').textContent = min ? fmt(min.y) : '—';
+            document.getElementById('cuando-maximo').textContent = max ? max.cuando : '';
+            document.getElementById('cuando-minimo').textContent = min ? min.cuando : '';
+
+            const vacia = document.getElementById('grafica-vacia');
+            vacia.textContent = prep.vacio;
+            vacia.classList.toggle('d-none', conValor.length > 0);
+
+            if (graficaActual) { graficaActual.destroy(); graficaActual = null; }
+            if (typeof Chart === 'undefined') {
+                vacia.textContent = 'Could not load charting library (check your internet connection).';
+                vacia.classList.remove('d-none');
+                return;
+            }
+
+            const tinta = '#bbbbbb', rejilla = 'rgba(255,255,255,0.07)';
+            const ys = conValor.map(p => p.y).concat(dato.rango);
+            const margen = (Math.max(...ys) - Math.min(...ys)) * 0.15 || 1;
+
+            graficaActual = new Chart(document.getElementById('grafica-canvas'), {
+                type: 'line',
+                data: {
+                    labels: esDia ? undefined : prep.puntos.map(p => p.x),
+                    datasets: [{
+                        label: dato.nombre,
+                        data: esDia ? prep.puntos : prep.puntos.map(p => p.y),
+                        borderColor: COLOR_SERIE,
+                        backgroundColor: COLOR_SERIE,
+                        borderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBorderColor: '#232323',
+                        pointBorderWidth: 2,
+                        tension: 0.25,
+                        spanGaps: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'nearest', axis: 'x', intersect: false },
+                    plugins: {
+                        legend: { display: false },
+                        rangoNormal: { rango: dato.rango },
+                        tooltip: {
+                            backgroundColor: '#111', borderColor: '#6e1e77', borderWidth: 1, padding: 10,
+                            titleColor: '#fff', bodyColor: '#ddd',
+                            filter: item => item.parsed.y != null,
+                            callbacks: {
+                                title: items => esDia ? formatoHora(items[0].parsed.x) : prep.puntos[items[0].dataIndex].cuando,
+                                label: item => {
+                                    const n = esDia ? 0 : prep.puntos[item.dataIndex].n;
+                                    return ` ${item.parsed.y.toFixed(dato.dec)} ${dato.unidad}` +
+                                        (n ? `  (average of ${n} reading${n > 1 ? 's' : ''})` : '');
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: esDia
+                            ? { type: 'linear', min: 0, max: 24,
+                                ticks: { stepSize: 3, color: tinta, callback: v => formatoHora(v) },
+                                grid: { color: rejilla }, border: { color: '#888' },
+                                title: { display: true, text: 'Time of day', color: tinta } }
+                            : { ticks: { color: tinta }, grid: { color: rejilla }, border: { color: '#888' } },
+                        y: { suggestedMin: Math.min(...ys) - margen, suggestedMax: Math.max(...ys) + margen,
+                             ticks: { color: tinta }, grid: { color: rejilla }, border: { color: '#888' },
+                             title: { display: true, text: dato.unidad, color: tinta } }
+                    }
+                },
+                plugins: [pluginRangoNormal]
+            });
+        }
+
+        function alternarPanel() {
+            const panel = document.getElementById('panel-valores');
+            const btn = document.getElementById('btn-toggle-panel');
+            const oculto = panel.classList.toggle('oculto');
+            btn.textContent = oculto ? '▶ Show values' : '◀ Hide values';
+            btn.setAttribute('aria-expanded', String(!oculto));
+            setTimeout(() => graficaActual && graficaActual.resize(), 320);
+        }
+
+        // =====================================================================
+        //  STARTUP
+        // =====================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('anio-actual').textContent = new Date().getFullYear();
+            cargarAstronautas();
+            try {
+                const guardada = JSON.parse(sessionStorage.getItem('hmw-sesion') || 'null');
+                if (guardada) aplicarSesion(guardada.id, guardada.nombre, guardada.idPuesto);
+            } catch (_) {}
+
+            const volverAlHistorial = () => {
+                window._volviendoDeDetalle = true;
+                bootstrap.Modal.getOrCreateInstance('#modalHistorial').show();
+            };
+            document.getElementById('modalHistorial').addEventListener('show.bs.modal', () => {
+                if (!window._volviendoDeDetalle) cargarHistorial();
+                window._volviendoDeDetalle = false;
+            });
+            document.getElementById('modalDetalleChequeo').addEventListener('hidden.bs.modal', volverAlHistorial);
+            document.getElementById('modalGrafica').addEventListener('hidden.bs.modal', volverAlHistorial);
+
+            document.getElementById('btn-cerrar-sesion').addEventListener('click', cerrarSesion);
+            document.getElementById('btn-ver-recomendaciones').addEventListener('click', mostrarRecomendaciones);
+            document.querySelectorAll('.modal-recomendacion').forEach(m =>
+                m.addEventListener('hidden.bs.modal', () => bootstrap.Modal.getOrCreateInstance('#modalValores').show()));
+
+            document.getElementById('modalGrafica').addEventListener('shown.bs.modal', dibujarGrafica);
+            document.getElementById('panel-valores').addEventListener('click', e => {
+                const b = e.target.closest('.btn-valor');
+                if (b) { estadoGrafica.campo = b.dataset.campo; dibujarGrafica(); }
+            });
+            document.getElementById('btn-toggle-panel').addEventListener('click', alternarPanel);
+            document.querySelectorAll('input[name="grafica-vista"]').forEach(r =>
+                r.addEventListener('change', e => { estadoGrafica.vista = e.target.value; dibujarGrafica(); }));
+
+            const body = document.getElementById('historial-body');
+            body.addEventListener('click', e => {
+                const tr = e.target.closest('tr.fila-registro');
+                if (tr) abrirDetalle(+tr.dataset.index);
+            });
+            body.addEventListener('keydown', e => {
+                const tr = e.target.closest('tr.fila-registro');
+                if (tr && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); abrirDetalle(+tr.dataset.index); }
+            });
+
+            document.getElementById('btn-modo-grafico').addEventListener('click', abrirModoGrafico);
+        });
+    </script>
+
+    <!-- Bootstrap JavaScript Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <!-- Chart.js for Graphical Mode -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</body>
+</html>
